@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>BLOGiNDEX</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Additional fonts for this theme -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this theme -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Temporary navbar container fix until Bootstrap 4 is patched -->
+    <style>
+    
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-light" id="mainNav">
+        <div class="container">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand page-scroll" href="index.html">BLOGiNDEX</a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="contact.html">联系</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <div class="site-heading">
+                        <h1>BLOGiNDEX</h1>
+                        <span class="subheading">这是一个十分简洁的博客，使用SSH框架搭建</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div id="view" class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <ul class="list-inline text-center">
+                        
+                        <li class="list-inline-item">
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; BLOGiNDEX 2017. </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery Version 3.1.1 -->
+    <script src="lib/jquery/jquery.js"></script>
+
+    <!-- Tether -->
+    <script src="lib/tether/tether.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+	<script>
+		$(function(){
+			var page = (function(){
+				var arr = window.location.href.match(/page=(\d+)/);
+				return (arr&&arr[1])||1;
+			}()),
+			tag = (function(){
+				var arr = window.location.href.match(/tag=(.[^&]+)/);
+				return (arr&&arr[1])||'';
+			}()),
+			sort = (function(){
+				var arr = window.location.href.match(/sort=(.[^&]+)/);
+				return (arr&&arr[1])||'';
+			}()),
+				$view = $("#view"),
+				//urls = location.search,
+				str = '';
+			$.get("list.action?pageBean.page=" + page + "&pageBean.size=5&blogCondition.tag="+tag+"&blogCondition.sort="+sort,function(data) {
+				if($.isArray(data.blogs)){
+					$.each(data.blogs,function(index,item){
+						str += ['<div class="post-preview">',
+						 '                    <a href="blog.html?blogid='+item.id+'">',
+						 '                        <h2 class="post-title">',
+						 '                            '+item.title,
+						 '                        </h2>',
+						 '                        <h3 class="post-subtitle">',
+						 '                            '+item.subtitle,
+						 '                        </h3>',
+						 '                    </a>',
+						 '                    <p class="post-meta clearfix"><span class="pull-left">分类：<a href="?page=1&sort='+item.sort+'">'+item.sort+'</a>  标签：<a href="?page=1&tag='+item.tag+'">'+item.tag+'</a></span><span class="pull-right">发表于：'+item.createTime+' <i class="fa fa-eye"></i> '+item.view+'人已查看</span></p>',
+						 '                </div>',
+						 '                <hr>'].join("");
+					})
+				}
+				if(data.pageBean.previous||data.pageBean.next){
+					str += ['<!-- Pager -->',
+					        '<div class="clearfix">',
+					        data.pageBean.previous?('<a class="btn btn-secondary float-left" href="?page='+data.pageBean.previous+'&tag='+tag+'&sort='+sort+'">上一页</a>'):'',
+					        data.pageBean.next?('<a class="btn btn-secondary float-right" href="?page='+data.pageBean.next+'&tag='+tag+'&sort='+sort+'">下一页</a>'):'',
+					        '</div>'].join("");
+				}
+				$view.html(str);
+			});
+		})
+	</script>
+</body>
+
+</html>

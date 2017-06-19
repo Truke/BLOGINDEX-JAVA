@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.locale" value="zh_CN" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="alwaysSelectFullNamespace" value="true"/>
+	<constant name="struts.multipart.saveDir" value="/tmp"/>
+
+	<package name="blog" extends="json-default" namespace="">
+		<!-- 显示blog列表 -->
+		<action name="list" class="blogAction" method="list">
+			<!-- 返回的JSON对象中包含blogs和pageBean两个对象的值 -->
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<!-- 添加blog -->
+		<action name="addBlog" class="blogAction" method="addBlog">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<!-- 删除blog -->
+		<action name="deleteBlog" class="blogAction" method="deleteBlog">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<!-- 查找blog -->
+		<action name="findBlog" class="blogAction" method="findBlog">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<!-- 更新blog -->
+		<action name="updateBlog" class="blogAction" method="updateBlog">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="sort" extends="json-default" namespace="">
+		<action name="addSort" class="org.blog.action.SortAction"
+			method="addSort">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="updateSort" class="org.blog.action.SortAction"
+			method="updateSort">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="deleteSort" class="sortAction" method="deleteSort">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="findSorts" class="org.blog.action.SortAction"
+			method="findSorts">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="user" extends="json-default" namespace="">
+		<action name="login" class="org.blog.action.UserAction"
+			method="login">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="loginout" class="org.blog.action.UserAction"
+			method="loginout">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="changepwd" class="org.blog.action.UserAction"
+			method="changepwd">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="getRandomPictrue" class="org.blog.action.UserAction"
+			method="getRandomPictrue">
+			<result name="success" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="contact" extends="json-default" namespace="">
+		<action name="addContact" class="org.blog.action.ContactAction"
+			method="addContact">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="findContacts" class="org.blog.action.ContactAction"
+			method="findContacts">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+		<action name="updateIsread" class="org.blog.action.ContactAction"
+			method="updateIsread">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="imgUpload" extends="json-default" namespace="">
+		<action name="imgUpload" class="org.blog.action.ImgUploadAction"
+			method="imgUpload">
+			<result name="success" type="json">
+				<param name="root">data</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">data</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

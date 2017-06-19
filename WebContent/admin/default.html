@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.3.0" rel="stylesheet">
+    <!-- jqgrid-->
+    <link href="css/plugins/jqgrid/ui.jqgrid.css?0820" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=3.2.0" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>反馈</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="jqGrid_wrapper">
+                            <table id="contactlist"></table>
+                            <div id="pager_list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js?v=3.4.0"></script>
+    <!-- jqGrid -->
+    <script src="js/plugins/jqgrid/i18n/grid.locale-cn.js?0820"></script>
+    <script src="js/plugins/jqgrid/jquery.jqGrid.min.js?0820"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function () {
+        	var contactlist = $("#contactlist").jqGrid({
+            	styleUI:'Bootstrap',
+            	url:'findContacts',
+                datatype: "json",
+                height: 450,
+                autowidth: true,
+                shrinkToFit: true,
+                colNames: ['id', '姓名','邮箱地址','内容','提交时间','操作'],
+                colModel: [
+                    {
+                        name: 'id',
+                        index: 'id',
+                        width: 60,
+                        formatter:"integer",
+                    },
+                    {
+                        name: 'name',
+                        index: 'name',
+                        width: 90,
+                    },
+                    {
+                        name: 'email',
+                        index: 'email',
+                        width: 90,
+                    },
+                    {
+                        name: 'content',
+                        index: 'content',
+                        width: 90,
+                    },
+                    {
+                        name: 'createtime',
+                        index: 'createtime',
+                        width: 90,
+                    },
+                    {
+                    	name:'isread',
+                    	width:100,
+                    	formatter:function(cellvalue,options,rowObject){
+                    		var str = '';
+                    		if(rowObject.isread==0){
+                    			str = '<a data-id="'+rowObject.id+'" href="javascript:;" class="notread">标记为已读</a>';
+                    		}else{
+                    			str = '<span>已读</span>';
+                    		}
+                    		return str;
+                    	}
+                    }
+                ],
+                pager: "#pager_list",
+                viewrecords: true,
+                prmNames:{
+                	page: "pageBean.page",  
+                    rows: "pageBean.size",
+                },
+                jsonReader:{
+                	root:'contacts',
+                	page:'pageBean.page',
+                	total:'pageBean.total',
+                	records:'pageBean.count',
+                },
+                add: false,
+                edit: false,
+                hidegrid: false,
+            });
+
+            // Add responsive to jqGrid
+            $(window).bind('resize', function () {
+                var width = $('.jqGrid_wrapper').width();
+                $('#contactlist').setGridWidth(width);
+            });
+            $(document).on('click','.notread',function(){
+            	var id=$(this).attr('data-id'),self = this;
+            	$.post('updateIsread',{"contact.id":id},function(data){
+            		if(data.status===1){
+            			window.top.swal({
+            				title:data.msg,
+            				type:'success'
+            			})
+            			$(self).replaceWith('<span>已读</span>');
+            		}
+            	})
+            })
+        });
+    </script>
+</body>
+
+</html>

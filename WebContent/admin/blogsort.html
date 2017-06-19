@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.3.0" rel="stylesheet">
+    <!-- jqgrid-->
+    <link href="css/plugins/jqgrid/ui.jqgrid.css?0820" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=3.2.0" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>博客分类</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="jqGrid_wrapper">
+                            <table id="sortlist"></table>
+                            <div id="pager_list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js?v=3.4.0"></script>
+    <!-- jqGrid -->
+    <script src="js/plugins/jqgrid/i18n/grid.locale-cn.js?0820"></script>
+    <script src="js/plugins/jqgrid/jquery.jqGrid.min.js?0820"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function () {
+        	var sortlist = $("#sortlist").jqGrid({
+            	styleUI:'Bootstrap',
+            	url:'findSorts',
+                datatype: "json",
+                height: 450,
+                autowidth: true,
+                shrinkToFit: true,
+                colNames: ['id', '分类'],
+                colModel: [
+                    {
+                        name: 'id',
+                        index: 'id',
+                        editable: true,
+                        width: '10%',
+                        formatter:"integer",
+                    },
+                    {
+                        name: 'sort',
+                        index: 'sort',
+                        editable: true,
+                        width: '90%',
+                    }
+                ],
+                pager: "#pager_list",
+                viewrecords: true,
+                jsonReader:{
+                	root:'sorts'
+                },
+                add: true,
+                edit: true,
+                addtext: 'Add',
+                edittext: 'Edit',
+                hidegrid: false,
+            });
+            // Setup buttons
+            sortlist.jqGrid('navGrid', '#pager_list', {
+            	edit: true,
+            	add: true,
+                del: true,
+                search: false
+            }
+            ,{
+            	width:'1000',
+            	height: 'auto', 
+            	url:'updateSort',
+            	beforeShowForm:function(form){
+            		form.find('[name]').each(function(){
+            			var key = $(this).attr('name');
+            			if(key==='id'){
+            				$(this).attr('readonly',true);
+            			}
+            		})
+            	},
+            	beforeSubmit:function(data){
+            		for(var key in data){
+            			if(data.hasOwnProperty(key)){
+            				data['sort.'+key] = data[key];
+            				delete data[key];
+            			}
+            		}
+            		//delete data['blog.bloglist_id'];
+            		return [data];
+            	},
+            	afterSubmit:function(data){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return data;
+            		}
+            	},
+            	closeAfterEdit: true 
+            },{
+            	width:'1000',
+            	height: 'auto', 
+            	url:'addSort', 
+            	beforeShowForm:function(form){
+            		$('#tr_id').remove();
+            		form.find('[name]').each(function(){
+            			var key = $(this).attr('name');
+            			$(this).attr({'name':'sort.'+key,'id':'sort.'+key});
+            		})
+            	},
+            	afterSubmit:function(data){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return data;
+            		}
+            	},
+            	closeAfterEdit: true 
+            },{
+            	height: 'auto', 
+            	url:'deleteSort',
+            	serializeDelData:function(data){
+            		return {"sort.id":data.id};
+            	},
+            	afterSubmit:function(data,postd){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return [data,postd];
+            		}
+            	},
+            	closeAfterDel: true
+            });
+
+            // Add responsive to jqGrid
+            $(window).bind('resize', function () {
+                var width = $('.jqGrid_wrapper').width();
+                $('#sortlist').setGridWidth(width);
+            });
+        });
+    </script>
+</body>
+
+</html>

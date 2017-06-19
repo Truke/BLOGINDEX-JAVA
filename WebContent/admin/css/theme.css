@@ -1,0 +1,78 @@
+/*
+ *   民信管理系统皮肤
+ *   皮肤一 官方版 #e9edf1主色 #dbe0e5辅色
+*/
+.skin-1 .nav-header {
+    background: #e9edf1
+}
+.skin-1 .message_icon i{
+    color:#a1aec4
+}
+.skin-1 .navbar-static-side{
+  background: #e9edf1
+}
+.skin-1 .nav-second-level {
+    background: #e9edf1;
+}
+.skin-1 .nav > li.active {
+    background: #dbe0e5;
+}
+.skin-1 .nav > li > a {
+    color: #323232;
+}
+.skin-1 .nav > li.active > a {
+    color: #323232;
+}
+.skin-1 .navbar-minimalize {
+    background: #dbe0e5;
+    border-color:#dbe0e5;
+}
+.skin-1 .navbar-static-top {
+    background: #ffffff;
+}
+.skin-1 .btn-primary:hover,
+.skin-1 .btn-primary:focus,
+.skin-1 .btn-primary:active,
+.skin-1 .btn-primary.active,
+.skin-1 .open .dropdown-toggle.btn-primary {
+    background-color: #5b6e8c;
+    border-color: #5b6e8c;
+    color: #FFFFFF;
+	-webkit-tap-highlight-color:rgba(255,255,255,0);
+	outline:rgba(255,255,255,0);
+}
+.skin-1 .pace .pace-progress{
+  background: #5b6e8c;
+}
+.skin-1 .nav > li.active{
+  border-left: 4px solid #dbe0e5;
+}
+.skin-1 .logo-element{
+  color:#323232
+}
+.skin-1 #page-wrapper {
+    background: #f4f6fa;
+}
+.skin-1 .nav-header a.dropdown-toggle {
+    color: #000;
+    margin-top: 10px;
+}
+.skin-1 .nav-header a.dropdown-toggle .text-muted {
+    color: #fff;
+    opacity: 0.8;
+}
+.skin-1 .navbar-default .nav > li > a:hover,
+.skin-1 .navbar-default .nav > li > a:focus {
+    background: #dbe0e5;
+    color:#323232;
+}
+.skin-1 .nav.nav-tabs > li.active > a {
+    color: #555;
+}
+.skin-1 .nav.nav-tabs > li.active {
+    background: transparent;
+}
+.skin-1 .page-tabs a.active {
+    background: #5b6e8c;
+    color: #fff;
+}

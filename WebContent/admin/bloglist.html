@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.3.0" rel="stylesheet">
+    <!-- jqgrid-->
+    <link href="css/plugins/jqgrid/ui.jqgrid.css?0820" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="js/plugins/simditor/styles/simditor.css" />
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=3.2.0" rel="stylesheet">
+
+    <style>
+        .table-responsive tr th:nth-child(4),
+        .table-responsive tr td:nth-child(4){
+        	display:none;
+        }
+    </style>
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>博客列表</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="jqGrid_wrapper">
+                            <table id="bloglist"></table>
+                            <div id="pager_list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js?v=3.4.0"></script>
+    <!-- jqGrid -->
+    <script src="js/plugins/jqgrid/i18n/grid.locale-cn.js?0820"></script>
+    <script src="js/plugins/jqgrid/jquery.jqGrid.min.js?0820"></script>
+	<!-- sm -->
+	
+	<script src="js/plugins/simditor/scripts/module.js"></script>
+	<script src="js/plugins/simditor/scripts/hotkeys.js"></script>
+	<script src="js/plugins/simditor/scripts/uploader.js"></script>
+	<script src="js/plugins/simditor/scripts/simditor.js"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function () {
+        	var sorts = sorts||$.get('findSorts.action',function(data){
+        		sorts = data.sorts;
+        	});
+        	var bloglist = $("#bloglist").jqGrid({
+            	styleUI:'Bootstrap',
+            	url:'list',
+                datatype: "json",
+                height: 450,
+                autowidth: true,
+                shrinkToFit: true,
+                rowNum: 10,
+                colNames: ['id', '标题', '副标题','正文', '标签', '分类', '创建时间'],
+                colModel: [
+                    {
+                        name: 'id',
+                        index: 'id',
+                        editable: true,
+                        width: 60,
+                        formatter:"integer",
+                    },
+                    {
+                        name: 'title',
+                        index: 'title',
+                        editable: true,
+                        width: 90,
+                    },
+                    {
+                        name: 'subtitle',
+                        index: 'subtitle',
+                        editable: true,
+                        width: 100,
+                    },
+                    {
+                        name: 'blog',
+                        index: 'blog',
+                        editable: true,
+                        edittype:'textarea',
+                    },
+                    {
+                        name: 'tag',
+                        index: 'tag',
+                        editable: true,
+                        width: 80,
+                    },
+                    {
+                        name: 'sort',
+                        index: 'sort',
+                        editable: true,
+                        width: 80,
+                    },
+                    {
+                        name: 'createTime',
+                        index: 'createTime',
+                        editable: true,
+                        width: 80,
+                    }
+                ],
+                pager: "#pager_list",
+                viewrecords: true,
+                prmNames:{
+                	page: "pageBean.page",  
+                    rows: "pageBean.size",
+                },
+                jsonReader:{
+                	root:'blogs',
+                	page:'pageBean.page',
+                	total:'pageBean.total',
+                	records:'pageBean.count',
+                },
+                add: true,
+                edit: true,
+                addtext: 'Add',
+                edittext: 'Edit',
+                hidegrid: false,
+            });
+            // Setup buttons
+            bloglist.jqGrid('navGrid', '#pager_list', {
+            	edit: true,
+            	add: true,
+                del: true,
+                search: false
+            }
+            ,{
+            	width:'1000',
+            	height: 'auto', 
+            	url:'updateBlog',
+            	beforeShowForm:function(form){
+            		form.find('[name]').each(function(){
+            			var key = $(this).attr('name');
+            			if(key==='id'){
+            				$(this).attr('readonly',true);
+            			}
+            			if(key==='sort'&&$.isArray(sorts)){
+            				var val = $(this).val();
+            				var r='<select id="sort" name="sort" class="FormElement form-control">';
+            				$.each(sorts,function(i,v){
+            					r += '<option value="'+v.sort+'" '+(val==v.sort?'selected':'')+'>'+v.sort+'</option>';
+            				})
+            				r+='</select>';
+            				$(this).replaceWith(r);
+            			}
+            		})
+            		var editor = new Simditor({
+            			textarea:form.find('#blog'),
+            			upload : {  
+            	            url : 'imgUpload', //文件上传的接口地址  
+            	            params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交  
+            	            fileKey: 'fileData', //服务器端获取文件数据的参数名  
+            	            connectionCount: 3,  
+            	            leaveConfirm: '正在上传文件'  
+            	        }   
+            		})
+            	},
+            	beforeSubmit:function(data){
+            		for(var key in data){
+            			if(data.hasOwnProperty(key)){
+            				data['blog.'+key] = data[key];
+            				delete data[key];
+            			}
+            		}
+            		delete data['blog.bloglist_id'];
+            		return [data];
+            	},
+            	afterSubmit:function(data){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return data;
+            		}
+            	},
+            	closeAfterEdit: true 
+            },{
+            	width:'1000',
+            	height: 'auto', 
+            	url:'addBlog.action', 
+            	beforeShowForm:function(form){
+            		$('#tr_id,#tr_createTime').remove();
+            		form.find('[name]').each(function(){
+            			var key = $(this).attr('name');
+            			$(this).attr({'name':'blog.'+key,'id':'blog.'+key});
+            			if(key==='sort'&&$.isArray(sorts)){
+            				var r='<select id="blog.sort" name="blog.sort" class="FormElement form-control">';
+            				$.each(sorts,function(i,v){
+            					r += '<option value="'+v.sort+'">'+v.sort+'</option>';
+            				})
+            				r+='</select>';
+            				$(this).replaceWith(r);
+            			}
+            		})
+            		var editor = new Simditor({
+            			textarea:form.find('#blog\\.blog')
+            		})
+            	},
+            	afterSubmit:function(data){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return data;
+            		}
+            	},
+            	closeAfterEdit: true 
+            },{
+            	height: 'auto', 
+            	url:'deleteBlog',
+            	serializeDelData:function(data){
+            		return {"blog.id":data.id};
+            	},
+            	afterSubmit:function(data,postd){
+            		if(data.responseJSON.status===0){
+            			window.top.relogin(data.responseJSON);
+            		}else{
+            			return [data,postd];
+            		}
+            	},
+            	closeAfterDel: true
+            });
+
+            // Add responsive to jqGrid
+            $(window).bind('resize', function () {
+                var width = $('.jqGrid_wrapper').width();
+                $('#bloglist').setGridWidth(width);
+            });
+        });
+    </script>
+</body>
+
+</html>

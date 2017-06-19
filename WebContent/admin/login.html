@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.3.0" rel="stylesheet">
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=3.2.0" rel="stylesheet">
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="bt_login_bgcolor" style="background:url(img/login.jpg)">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div class="bt_login_boxs">
+            <div class="sk-spinner sk-spinner-cube-grid">
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                                <div class="sk-cube"></div>
+                            </div><h3 style="color:#fff">管理员后台登录</h3>
+            <form id="loginform" class="m-t my-form" role="form" method="post">
+                <div class="form-group bt_login_inputs">
+                    <input id="user" name="user" type="text" class="form-control" placeholder="用户名" required>
+                </div> 
+                <div class="form-group bt_login_inputs">
+                    <input id="password" type="password" name="password" class="form-control" placeholder="密码" required>
+                </div>
+                <div class="form-group bt_login_inputs" >
+                    <input id="code" type="code" class="form-control" placeholder="图片验证码" required style="width:50%;float:left">
+                    <img src="getRandomPictrue" alt="" style="width:50%;height:34px" id="checkImg" onclick="this.src='getRandomPictrue?'+(+new Date())">
+                </div>
+                <button id="J-submit" type="submit" class="btn btn-primary block full-width bt_login_bnt">登 录</button>
+                <!--<p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
+                </p>-->
+            </form>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js?v=3.4.0"></script>
+    <script src="js/plugins/toastr/toastr.min.js"></script>
+    <script>
+    $(function(){
+    	$(document).on('submit',"#loginform",function(){
+    		var user = $('#user').val(),
+    			password = $('#password').val(),
+    			code = $('#code').val();
+    		$.post('login',{"user.user":user,"user.password":password,"code":code},function(data){
+    			if(data.status===0){
+    				toastr.options = {
+    						  "closeButton": true,
+    						  "debug": false,
+    						  "progressBar": true,
+    						  "positionClass": "toast-top-right",
+    						  "onclick": null,
+    						  "showDuration": "400",
+    						  "hideDuration": "1000",
+    						  "timeOut": "7000",
+    						  "extendedTimeOut": "1000",
+    						  "showEasing": "swing",
+    						  "hideEasing": "linear",
+    						  "showMethod": "fadeIn",
+    						  "hideMethod": "fadeOut"
+    						}
+    				toastr.error(data.msg);
+    			}else if(data.status===1){
+    				localStorage.clear();
+    				localStorage.setItem("userid", data.userid);
+    				localStorage.setItem("username",data.username);
+    				window.top.location = '/MyBlog/admin/index.html';
+    			}
+    		})
+    		return false;
+    	})
+    })
+    </script>
+</body>
+</html>
