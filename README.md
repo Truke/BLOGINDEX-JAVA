@@ -14,7 +14,7 @@
 
 ## sql
 
-   'create database blog;
+    create database blog;
 
 	create table blog(
 		id int primary key auto_increment,
@@ -45,4 +45,4 @@
 		content text not null,
 		isread int,
 		createtime varchar(32)
-	);'
+	);
