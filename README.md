@@ -13,7 +13,9 @@
 * sweetalert
 
 ##sql
+
    'create database blog;
+   
 	create table blog(
 		id int primary key auto_increment,
 		title varchar(128) not null,
