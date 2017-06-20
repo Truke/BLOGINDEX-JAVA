@@ -1,4 +1,4 @@
-#BLOGINDEX-JAVA
+# BLOGINDEX-JAVA
 
 > 这是我用JAVA的SSH框架（Spring+Struts2+Hibernate）写的前后端分离的一个博客项目。其中项目中有用到
 
@@ -12,10 +12,10 @@
 * jqgrid
 * sweetalert
 
-##sql
+## sql
 
    'create database blog;
-   
+
 	create table blog(
 		id int primary key auto_increment,
 		title varchar(128) not null,
