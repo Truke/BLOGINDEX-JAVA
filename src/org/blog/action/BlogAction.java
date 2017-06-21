@@ -20,8 +20,7 @@ import org.springframework.stereotype.Controller;
 
 @SuppressWarnings("serial")
 @Controller("blogAction")
-/**使用Spring记性托管，使用session作用域，在同一个会话中使用同一个Action实例，主要为了让分页数据PageBean和查询条件数据BlogCondition能保持上一次的状态*/
-@Scope("session")
+@Scope("prototype")
 public class BlogAction extends BaseAction {
 	private Blog blog;// blog
 	private List<Blog> blogs;// blog列表
@@ -82,6 +81,7 @@ public class BlogAction extends BaseAction {
 		}
 		// 总记录数
 		pageBean.setCount(blogService.findCount(blogCondition));
+		
 
 		// 页数
 		long total = ((pageBean.getCount() % pageBean.getSize() == 0) ? pageBean

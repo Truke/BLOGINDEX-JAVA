@@ -16,7 +16,7 @@
 
 	<package name="blog" extends="json-default" namespace="">
 		<!-- 显示blog列表 -->
-		<action name="list" class="blogAction" method="list">
+		<action name="list" class="blogAction" method="list" >
 			<!-- 返回的JSON对象中包含blogs和pageBean两个对象的值 -->
 			<result name="success" type="json">
 				<param name="root">data</param>
